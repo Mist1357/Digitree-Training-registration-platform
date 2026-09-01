@@ -162,49 +162,6 @@ function Registration() {
             Please complete this form to secure your place.
           </p>
 
-        </div>      if (error) {
-        if (error.code === '23505') setErrorMessage('A registration with this phone number or email already exists.');
-        else setErrorMessage('Unable to submit your registration. Please check your connection and try again.');
-      } else {
-        setSubmitted(true);
-      }
-    } catch {
-      setErrorMessage('A network error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 animate-fade-in">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100 animate-slide-up">
-          <img src={logoImg} alt="DIGITREE" className="h-24 w-auto mx-auto mb-6 object-contain" />
-          <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">✓</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful</h2>
-          <p className="text-gray-600 mb-8 leading-relaxed">
-            Thank you for registering for the DIGITREE Data Analysis Basic Training Program. Further information will be communicated to you.
-          </p>
-          <button onClick={() => window.location.reload()} className="w-full bg-digitree-700 text-white py-3 rounded-xl font-medium hover:bg-digitree-600 transition-all transform hover:-translate-y-0.5 shadow-md">
-            Return Home
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-2xl w-full mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 animate-slide-up">
-        
-        {/* Header Section */}
-        <div className="bg-white px-6 py-8 sm:p-10 border-b border-gray-100 text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-digitree-500 to-digitree-700"></div>
-          <img src={logoImg} alt="DIGITREE" className="h-28 w-auto mx-auto mb-6 object-contain animate-fade-in" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-digitree-900 tracking-tight mb-2">
-            DIGITREE DATA ANALYSIS<br className="hidden sm:block" /> BASIC TRAINING PROGRAM
-          </h1>
-          <p className="text-gray-500">Please complete this form to secure your place.</p>
         </div>
 
         {/* Form Section */}
