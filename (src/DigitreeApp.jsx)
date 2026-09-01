@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import Papa from 'papaparse';
 // Here is where we use your exact logo name!
-import logoImg from './file_00000000b41c81f4a894fccfa368ac61.png';
+import logoImg from './logo.png';
 
 const LEVEL_OPTIONS = ['100 Level', '200 Level', '300 Level', '400 Level', '500 Level', 'Graduate', 'Other'];
 const REFERRAL_OPTIONS = ['WhatsApp', 'Facebook', 'Instagram', 'Friend / Referral', 'School', 'Flyer / Poster', 'Other'];
