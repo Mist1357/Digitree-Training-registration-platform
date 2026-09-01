@@ -1,40 +1,168 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { supabase } from './lib/supabase';
-import Papa from 'papaparse';
-// Here is where we use your exact logo name!
 import logoImg from './logo.png';
 
-const LEVEL_OPTIONS = ['100 Level', '200 Level', '300 Level', '400 Level', '500 Level', 'Graduate', 'Other'];
-const REFERRAL_OPTIONS = ['WhatsApp', 'Facebook', 'Instagram', 'Friend / Referral', 'School', 'Flyer / Poster', 'Other'];
+const LEVEL_OPTIONS = [
+  '100 Level',
+  '200 Level',
+  '300 Level',
+  '400 Level',
+  '500 Level',
+  'Graduate',
+  'Other'
+];
+
+const REFERRAL_OPTIONS = [
+  'WhatsApp',
+  'Facebook',
+  'Instagram',
+  'Friend / Referral',
+  'School',
+  'Flyer / Poster',
+  'Other'
+];
 
 // --- PUBLIC REGISTRATION PAGE ---
 function Registration() {
   const [formData, setFormData] = useState({
-    full_name: '', phone: '', email: '', school: '', level: '100 Level',
-    department: '', address: '', reason_for_joining: '', referral_source: 'WhatsApp',
-    active_participation: false, consent: false
+    full_name: '',
+    phone: '',
+    email: '',
+    school: '',
+    level: '100 Level',
+    department: '',
+    address: '',
+    reason_for_joining: '',
+    referral_source: 'WhatsApp',
+    active_participation: false,
+    consent: false
   });
+
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setErrorMessage('');
+
     if (!formData.consent || !formData.active_participation) {
-      setErrorMessage('You must agree to active participation and data processing to continue.');
+      setErrorMessage(
+        'You must agree to active participation and data processing to continue.'
+      );
       return;
     }
+
+    if (!supabase) {
+      setErrorMessage(
+        'Registration service is currently unavailable. Please try again later.'
+      );
+      return;
+    }
+
     setLoading(true);
+
     try {
-      const { error } = await supabase.from('registrations').insert([formData]);
+      const { error } = await supabase
+        .from('registrations')
+        .insert([formData]);
+
       if (error) {
+        console.error('Supabase Error:', error);
+
+        if (error.code === '23505') {
+          setErrorMessage(
+            'A registration with this phone number or email already exists.'
+          );
+        } else {
+          setErrorMessage(
+            'Unable to submit your registration. Please check your connection and try again.'
+          );
+        }
+      } else {
+        setSubmitted(true);
+      }
+
+    } catch (err) {
+      console.error('Network Error:', err);
+      setErrorMessage(
+        'A network error occurred. Please try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center border border-gray-100">
+
+          <img
+            src={logoImg}
+            alt="DIGITREE"
+            className="h-24 w-auto mx-auto mb-6 object-contain"
+          />
+
+          <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+            ✓
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Registration Successful
+          </h2>
+
+          <p className="text-gray-600 mb-8">
+            Thank you for registering for the DIGITREE Data Analysis Basic Training Program. Further information will be communicated to you.
+          </p>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full bg-digitree-700 text-white py-3 rounded-xl font-medium"
+          >
+            Return Home
+          </button>
+
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
+
+      <div className="max-w-2xl w-full mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+
+        <div className="bg-white px-6 py-8 sm:p-10 border-b border-gray-100 text-center">
+
+          <img
+            src={logoImg}
+            alt="DIGITREE"
+            className="h-28 w-auto mx-auto mb-6 object-contain"
+          />
+
+          <h1 className="text-2xl sm:text-3xl font-bold text-digitree-900">
+            DIGITREE DATA ANALYSIS
+            <br />
+            BASIC TRAINING PROGRAM
+          </h1>
+
+          <p className="text-gray-500 mt-3">
+            Please complete this form to secure your place.
+          </p>
+
+        </div>      if (error) {
         if (error.code === '23505') setErrorMessage('A registration with this phone number or email already exists.');
         else setErrorMessage('Unable to submit your registration. Please check your connection and try again.');
       } else {
